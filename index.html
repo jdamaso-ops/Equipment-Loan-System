@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipment Loan System</title>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Equipment Loan System</h1>
+            <p>Student Laptop/Equipment Checkout</p>
+        </header>
+
+        <main>
+            <!-- Checkout Form -->
+            <section class="form-section">
+                <h2>New Equipment Checkout</h2>
+                <form id="checkoutForm">
+                    <div class="form-group">
+                        <label for="studentName">Student Name: </label>
+                        <input type="text" id="studentName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="studentEmail">Student Email: </label>
+                        <input type="text" id="studentEmail" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="equipmentType">Equipment Type: </label>
+                        <select id="equipmentType" required>
+                            <option value="">|-- Select Equipment --|</option>
+                            <option value="Laptop">Laptop</option>
+                            <option value="Monitor">Monitor</option>
+                            <option value="Keyboard">Keyboard</option>
+                            <option value="Mouse">Mouse</option>
+                            <option value="Webcam">Webcam</option>
+                            <option value="Headphones">Headphones</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="equipmentId">Equipment Serial/ID: </label>
+                        <input type="text" id="equipmentId" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dueDate">Due Date: </label>
+                        <input type="date" id="dueDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes">Notes: </label>
+                        <textarea id="notes" rows="3"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Check Out Equipment</button>
+                </form>
+
+                <div id="successMessage" class="message success" style="display: none;">
+                    ✓ Equipment checkout out successfully
+                </div>
+                <div id="errorMessage" class="message error" style="display: none;">
+                    ✗ Error: <span id="errorText"></span>
+                </div>
+            </section>
+
+            <!-- Active Loans -->
+            <section class="loans-section">
+                <h2>Active Loans</h2>
+                <table id="loansTable">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Equipment</th>
+                            <th>Serial/ID</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="loansBody">
+                        <tr><td colspan="6">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Josef Michael Damaso. Equipment Loan System. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="assets/script.js"></script>
+</body>
+</html>
