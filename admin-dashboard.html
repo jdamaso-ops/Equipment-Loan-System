@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Equipment Loan System</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Admin Dashboard</h1>
+            <p>Equipment Loan Management</p>
+            <button id="adminLogoutBtn" class="btn-small" style="margin-top: 15px;">Logout</button>
+        </header>
+
+        <nav class="admin-nav">
+            <button class="nav-btn active" data-tab="overview">Overview</button>
+            <button class="nav-btn" data-tab="loans">Active Loans</button>
+            <button class="nav-btn" data-tab="equipment">Equipment</button>
+            <button class="nav-btn" data-tab="students">Students</button>
+            <button class="nav-btn" data-tab="reports">Reports</button>
+        </nav>
+
+        <main>
+            <!-- Overview Tab -->
+            <section id="overviewTab" class="tab-content active">
+                <h2>Dashboard Overview</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Equipment</h3>
+                        <p id="totalEquipment" class="stat-number">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Equipment On Loan</h3>
+                        <p id="equipmentOnLoan" class="stat-number">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Overdue Items</h3>
+                        <p id="overdueItems" class="stat-number warning">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Active Students</h3>
+                        <p id="activeStudents" class="stat-number">0</p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 40px;">Recent Activity</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Student</th>
+                            <th scope="col">Equipment</th>
+                            <th scope="col">Action</th>
+                            <th scope="col">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentActivityBody">
+                        <tr><td colspan="4">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Active Loans Tab -->
+            <section id="loansTab" class="tab-content">
+                <h2>Active Loans Management</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Student</th>
+                            <th scope="col">Equipment</th>
+                            <th scope="col">Due Date</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="loansTableBody">
+                        <tr><td colspan="5">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Equipment Tab -->
+            <section id="equipmentTab" class="tab-content">
+                <h2>Equipment Inventory</h2>
+                <button type="submit" class="btn-primary" style="margin-bottom: 20px; width: auto;" onclick="openAddEquipmentModal()">+ Add Equipment</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Type</th>
+                            <th scope="col">Serial/ID</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Last Maintenance</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="equipmentTableBody">
+                        <tr><td colspan="5">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Students Tab -->
+            <section id="studentsTab" class="tab-content">
+                <h2>Student Accounts</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Active Loans</th>
+                            <th scope="col">Joined</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentsTableBody">
+                        <tr><td colspan="4">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Reports Tab -->
+            <section id="reportsTab" class="tab-content">
+                <h2>Reports &amp; Analytics</h2>
+                <div class="report-section">
+                    <h3>Loan Reports</h3>
+                    <button type="submit" class="btn-primary" style="width: auto;" onclick="generateLoanReport()">Generate Loan Report</button>
+                    <div id="loanReportContainer"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Equipment Loan System. All rights reserved. </p>
+        </footer>
+    </div>
+
+    <!-- Modal for adding equipment -->
+    <div id="equipmentModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddEquipmentModal()">&times;</span>
+            <h2>Add New Equipment</h2>
+            <form id="addEquipmentForm">
+                <div class="form-group">
+                    <label for="newEquipType">Type:</label>
+                    <input type="text" id="newEquipType" required>
+                </div>
+                <div class="form-group">
+                    <label for="newEquipId">Serial/ID:</label>
+                    <input type="text" id="newEquipId" required>
+                </div>
+                <div class="form-group">
+                    <label for="newEquipStatus">Status:</label>
+                    <select id="newEquipStatus" required>
+                        <option value="Available">Available</option>
+                        <option value="On Loan">On Loan</option>
+                        <option value="Maintenance">Maintenance</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary">Add Equipment</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="assets/admin-dashboard.js"></script>
+</body>
+</html>

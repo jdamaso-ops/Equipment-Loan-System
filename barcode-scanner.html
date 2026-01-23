@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barcode Scanner - Equipment Loan System</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.20.0/umd/zxing.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Barcode Scanner Checkout</h1>
+            <p>Quick Equipment Checkout via Barcode</p>
+        </header>
+
+        <main>
+            <section class="form-section">
+                <h2>Scan Equipment</h2>
+                <div id="scannerContainer" style="width: 100%; max-width: 400px; margin: 20px auto;">
+                    <video id="video" style="width: 100%; border: 2px solid #667eea; border-radius: 8px;"></video>
+                </div>
+
+                <div id="scannedInfo" style="display: none; margin: 20px 0; padding: 15px; background:  #f0f0f0; border-radius: 4px;">
+                    <h3>Scanned Equipment</h3>
+                    <p>ID: <strong id="scannedId"></strong></p>
+                    <p>Type:  <strong id="scannedType"></strong></p>
+                </div>
+
+                <h3 style="margin-top: 40px;">Student Information</h3>
+                <div class="form-group">
+                    <label for="scanStudentName">Student Name:</label>
+                    <input type="text" id="scanStudentName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="scanStudentEmail">Student Email:</label>
+                    <input type="email" id="scanStudentEmail" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="scanDueDate">Due Date:</label>
+                    <input type="date" id="scanDueDate" required>
+                </div>
+
+                <button type="submit" id="completeCheckout" class="btn-primary" style="display: none;">Complete Checkout</button>
+            </section>
+
+            <section class="loans-section">
+                <h2>Recent Scans</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Equipment ID</th>
+                            <th scope="col">Scan Time</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scanHistoryBody">
+                        <tr><td colspan="3">No scans yet</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Equipment Loan System. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="../Equipment-Loan-System/assets/barcode-scanner.js"></script>
+</body>
+</html>

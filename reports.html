@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Equipment Loan System</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Loan Reports &amp; Analytics</h1>
+            <p>Historical Data and Statistics</p>
+        </header>
+
+        <main>
+            <section>
+                <h2>Report Filters</h2>
+                <div class="form-group">
+                    <label for="reportType">Report Type:</label>
+                    <select id="reportType" onchange="generateReport()">
+                        <option value="all-loans">All Loans</option>
+                        <option value="overdue">Overdue Loans</option>
+                        <option value="by-equipment">By Equipment</option>
+                        <option value="by-student">By Student</option>
+                        <option value="by-date">By Date Range</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="dateRangeGroup" style="display: none;">
+                    <label for="startDate">Start Date:</label>
+                    <input type="date" id="startDate" onchange="generateReport()">
+                    <label for="endDate">End Date:</label>
+                    <input type="date" id="endDate" onchange="generateReport()">
+                </div>
+
+                <button type="submit" class="btn-primary" style="width: auto;" onclick="exportReport()">Export to CSV</button>
+            </section>
+
+            <section>
+                <h2 id="reportTitle">All Loans Report</h2>
+                <table id="reportTable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Student</th>
+                            <th scope="col">Equipment</th>
+                            <th scope="col">Checkout</th>
+                            <th scope="col">Return</th>
+                            <th scope="col">Duration</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportBody">
+                        <tr><td colspan="5">Loading... </td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Equipment Loan System. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="../Equipment-Loan-System/assets/report.js"></script>
+</body>
+</html>
