@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Loans - Equipment Loan System</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Equipment Loan System</h1>
+            <p>Student Portal</p>
+            <button type="submit" id="logoutBtn" class="btn-small" style="margin-top: 15px;">Logout</button>
+        </header>
+
+        <main>
+            <!-- Login Section -->
+            <section id="loginSection" class="form-section">
+                <h2>Student Login</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email:</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password:</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Login</button>
+                </form>
+                <p style="margin-top: 15px; text-align: center;">
+                    Don't have an account? <a href="#" id="switchToRegister" style="color: #667eea; cursor: pointer;">Register here</a>
+                </p>
+            </section>
+
+            <!-- Register Section (Hidden by default) -->
+            <section id="registerSection" class="form-section" style="display: none;">
+                <h2>Create Account</h2>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="registerName">Full Name:</label>
+                        <input type="text" id="registerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">Email:</label>
+                        <input type="email" id="registerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Password:</label>
+                        <input type="password" id="registerPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerConfirm">Confirm Password:</label>
+                        <input type="password" id="registerConfirm" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Register</button>
+                </form>
+                <p style="margin-top: 15px; text-align: center;">
+                    Already have an account? <a href="#" id="switchToLogin" style="color: #667eea; cursor: pointer;">Login here</a>
+                </p>
+            </section>
+
+            <!-- Student Dashboard (Hidden until login) -->
+            <section id="dashboardSection" style="display: none;">
+                <h2>My Active Loans</h2>
+                <table id="studentLoansTable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Equipment</th>
+                            <th scope="col">Serial/ID</th>
+                            <th scope="col">Checkout Date</th>
+                            <th scope="col">Due Date</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentLoansBody">
+                        <tr><td colspan="5">Loading...</td></tr>
+                    </tbody>
+                </table>
+
+                <h2 style="margin-top: 40px;">Loan History</h2>
+                <table id="loanHistoryTable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Equipment</th>
+                            <th scope="col">Checkout</th>
+                            <th scope="col">Return Date</th>
+                            <th scope="col">Duration</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyBody">
+                        <tr><td colspan="4">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <div id="successMessage" class="message success" style="display: none;">
+                ✓ <span id="successText"></span>
+            </div>
+            <div id="errorMessage" class="message error" style="display:  none;">
+                ✗ Error: <span id="errorText"></span>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Josef Michael Damaso. Equipment Loan System. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="../Equipment-Loan-System/assets/student-portal.js"></script>
+</body>
+</html>
