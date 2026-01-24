@@ -1,7 +1,7 @@
 const SUPABASE_URL = 'https://zlfiwplfwzukyczvmlvv.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_54ZSuDcBHMTiUwqIuYPHgg_92qQoj2W';
 
-const supabase = window. supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Generate reports based on type
 async function generateReport() {
@@ -83,7 +83,7 @@ async function getLoansByStudent() {
 
 async function getLoansByDateRange() {
     const start = document.getElementById('startDate').value;
-    const end = document. getElementById('endDate').value;
+    const end = document.getElementById('endDate').value;
 
     if (!start || !end) {
         alert('Please select date range');

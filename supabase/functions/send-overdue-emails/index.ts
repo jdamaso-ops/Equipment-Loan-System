@@ -1,9 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 
-const supabaseUrl = 'https://YOUR_SUPABASE_URL'; // Replace with your Supabase URL
-const supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY'; // Replace with your Supabase Anon Key
-const resendApiKey = 'YOUR_RESEND_API_KEY'; // Replace with your Resend API Key
+const supabaseUrl = 'https://zlfiwplfwzukyczvmlvv.supabase.co'; // Replace with your Supabase URL
+const supabaseAnonKey = 'sb_publishable_54ZSuDcBHMTiUwqIuYPHgg_92qQoj2W'; // Replace with your Supabase Anon Key
+const resendApiKey = 're_GBooZToT_6NJovwD5Z5aVDBDCe1xfGLFJ'; // Replace with your Resend API Key
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 const resend = new Resend(resendApiKey);
