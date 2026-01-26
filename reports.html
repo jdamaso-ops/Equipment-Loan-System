@@ -4,13 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reports - Equipment Loan System</title>
-    <link rel="stylesheet" href="assets/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="assets/report.js"></script>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Loan Reports &amp; Analytics</h1>
-            <p>Historical Data and Statistics</p>
+        <header class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
+            <div class="max-w-7xl mx-auto px-6 py-5">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-xl md:text-2xl font-bold">
+                            Loan Reports &amp; Analytics
+                        </h1>
+                        <p class="text-xs md:text-sm text-indigo-100">
+                            Historical Data and Statistics
+                        </p>
+                    </div>
+
+                    <!-- Desktop Nav -->
+                    <nav aria-label="desktop nav" class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                        <a href="index.html" class="hover:text-indigo-200">Home</a>
+                        <a href="student-portal.html" class="hover:text-indigo-200">Student Portal</a>
+                        <a href="admin-dashboard.html" class="hover:text-indigo-200">Admin Dashboard</a>
+                        <a href="barcode-scanner.html" class="hover:text-indigo-200">Barcode Scanner</a>
+                        <a href="reports.html" class="hover:text-indigo-200">Reports</a>
+                    </nav>
+                </div>
+
+                <!-- Mobile Nav -->
+                <nav aria-label="mobile nav" class="md:hidden mt-4 grid grid-cols-2 gap-3 text-sm font-medium">
+                    <a href="index.html" class="hover:text-indigo-200">Home</a>
+                    <a href="student-portal.html" class="hover:text-indigo-200">Student</a>
+                    <a href="admin-dashboard.html" class="hover:text-indigo-200">Admin</a>
+                    <a href="barcode-scanner.html" class="hover:text-indigo-200">Scanner</a>
+                    <a href="reports.html" class="hover:text-indigo-200">Reports</a>
+                </nav>
+            </div>
         </header>
 
         <main>
@@ -34,7 +62,7 @@
                     <input type="date" id="endDate" onchange="generateReport()">
                 </div>
 
-                <button type="submit" class="btn-primary" style="width: auto;" onclick="exportReport()">Export to CSV</button>
+                <button type="submit" class="btn-primary width: auto;" onclick="exportReport()">Export to CSV</button>
             </section>
 
             <section>
@@ -59,8 +87,5 @@
         <footer>
             <p>&copy; 2026 Josef Michael Damaso. Equipment Loan System. All rights reserved.</p>
         </footer>
-    </div>
-
-    <script src="../Equipment-Loan-System/assets/report.js"></script>
 </body>
 </html>

@@ -4,22 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Equipment Loan System</title>
-    <link rel="stylesheet" href="../Equipment-Loan-System/assets/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="assets/admin-dashboard.js"></script>
+
 </head>
 <body>
     <div class="container">
         <header>
             <h1>Admin Dashboard</h1>
             <p>Equipment Loan Management</p>
-            <button type="submit" id="adminLogoutBtn" class="btn-small" style="margin-top: 15px;">Logout</button>
+            <button type="submit" id="adminLogoutBtn" class="btn-small mt-15">Logout</button>
         </header>
 
         <nav class="admin-nav">
-            <button type="button" class="nav-btn active" data-tab="overview">Overview</button>
-            <button type="button" class="nav-btn" data-tab="loans">Active Loans</button>
-            <button type="button" class="nav-btn" data-tab="equipment">Equipment</button>
-            <button type="button" class="nav-btn" data-tab="students">Students</button>
-            <button type="button" class="nav-btn" data-tab="reports">Reports</button>
+            <div class="mt-4 border-t border-white/20 pt-3 flex flex-wrap gap-2 text-sm font-medium">
+                <button type="button" class="nav-btn active rounded-md bg-white/20 px-4 py-2" data-tab="overview">
+                    Overview
+                </button>
+                <button type="button" class="nav-btn rounded-md px-4 py-2 hover:bg-white/10" data-tab="loans">
+                    Active Loans
+                </button>
+                <button type="button" class="nav-btn rounded-md px-4 py-2 hover:bg-white/10" data-tab="equipment">
+                    Equipment
+                </button>
+                <button type="button" class="nav-btn rounded-md px-4 py-2 hover:bg-white/10" data-tab="students">
+                    Students
+                </button>
+                <button type="button" class="nav-btn rounded-md px-4 py-2 hover:bg-white/10" data-tab="reports">
+                    Reports
+                </button>
+            </div>
         </nav>
 
         <main>
@@ -83,7 +97,7 @@
             <!-- Equipment Tab -->
             <section id="equipmentTab" class="tab-content">
                 <h2>Equipment Inventory</h2>
-                <button type="submit" class="btn-primary" style="margin-bottom: 20px; width: auto;" onclick="openAddEquipmentModal()">+ Add Equipment</button>
+                <button type="submit" class="btn-primary mb-20 width: auto;" onclick="openAddEquipmentModal()">+ Add Equipment</button>
                 <table>
                     <thead>
                         <tr>
@@ -123,7 +137,7 @@
                 <h2>Reports &amp; Analytics</h2>
                 <div class="report-section">
                     <h3>Loan Reports</h3>
-                    <button type="submit" class="btn-primary" style="width: auto;" onclick="generateLoanReport()">Generate Loan Report</button>
+                    <button type="submit" class="btn-primary width: auto;" onclick="generateLoanReport()">Generate Loan Report</button>
                     <div id="loanReportContainer"></div>
                 </div>
             </section>
@@ -160,7 +174,5 @@
             </form>
         </div>
     </div>
-
-    <script src="assets/admin-dashboard.js"></script>
 </body>
 </html>

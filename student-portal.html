@@ -4,14 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Loans - Equipment Loan System</title>
-    <link rel="stylesheet" href="assets/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="assets/student-portal.js"></script>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Equipment Loan System</h1>
-            <p>Student Portal</p>
-            <button type="submit" id="logoutBtn" class="btn-small" style="margin-top: 15px;">Logout</button>
+        <header class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
+            <div class="max-w-7xl mx-auto px-6 py-5">
+                <div class="flex items-center justify-between">
+                    <!-- Brand -->
+                    <div>
+                        <h1 class="text-xl md:text-2xl font-bold">
+                            Equipment Loan System
+                        </h1>
+                        <p class="text-xs md:text-sm text-indigo-100">\
+                            Student Portal
+                        </p>
+                    </div>
+
+                    <!-- Desktop Nav -->
+                    <nav aria-label="desktop nav" class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                        <a href="index.html" class="hover:text-indigo-200">Home</a>
+                        <a href="student-portal.html" class="hover:text-indigo-200">Student Portal</a>
+                        <a href="admin-dashboard.html" class="hover:text-indigo-200">Admin Dashboard</a>
+                        <a href="barcode-scanner.html" class="hover:text-indigo-200">Barcode Scanner</a>
+                        <a href="reports.html" class="hover:text-indigo-200">Reports</a>
+
+                        <!-- Logout Button -->
+                        <button type="button" id="logoutBtn" class="ml-4 rounded-md bg-white/10 px-3 py-1.5 hover:bg-white/20 transition">Logout</button>
+                    </nav>
+
+                    <!-- Mobile Nav -->
+                    <nav aria-label="mobile nav" class="md:hidden mt-4 grid grid-cols-2 gap-3 text-sm font-medium">
+                        <a href="index.html" class="hover:text-indigo-200">Home</a>
+                        <a href="student-portal.html" class="hover:text-indigo-200">Student</a>
+                        <a href="admin-dashboard.html" class="hover:text-indigo-200">Admin</a>
+                        <a href="barcode-scanner.html" class="hover:text-indigo-200">Scanner</a>
+                        <a href="reports.html" class="hover:text-indigo-200">Reports</a>
+                    </nav>
+                </div>
+            </div>
         </header>
 
         <main>
@@ -29,8 +60,8 @@
                     </div>
                     <button type="submit" class="btn-primary">Login</button>
                 </form>
-                <p style="margin-top: 15px; text-align: center;">
-                    Don't have an account? <a href="#" id="switchToRegister" style="color: #667eea; cursor: pointer;">Register here</a>
+                <p class="margin-top: 15px; text-align: center;">
+                    Don't have an account? <a href="#" id="switchToRegister" class="color: #667eea; cursor: pointer;">Register here</a>
                 </p>
             </section>
 
@@ -56,8 +87,8 @@
                     </div>
                     <button type="submit" class="btn-primary">Register</button>
                 </form>
-                <p style="margin-top: 15px; text-align: center;">
-                    Already have an account? <a href="#" id="switchToLogin" style="color: #667eea; cursor: pointer;">Login here</a>
+                <p class="margin-top: 15px; text-align: center;">
+                    Already have an account? <a href="#" id="switchToLogin" class="color: #667eea; cursor: pointer;">Login here</a>
                 </p>
             </section>
 
@@ -79,7 +110,7 @@
                     </tbody>
                 </table>
 
-                <h2 style="margin-top: 40px;">Loan History</h2>
+                <h2 class="margin-top: 40px;">Loan History</h2>
                 <table id="loanHistoryTable">
                     <thead>
                         <tr>
@@ -106,8 +137,5 @@
         <footer>
             <p>&copy; 2026 Josef Michael Damaso. Equipment Loan System. All rights reserved.</p>
         </footer>
-    </div>
-
-    <script src="../Equipment-Loan-System/assets/student-portal.js"></script>
 </body>
 </html>
