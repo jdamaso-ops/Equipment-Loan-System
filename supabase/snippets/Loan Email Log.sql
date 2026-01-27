@@ -1,4 +1,4 @@
-CREATE TABLE email_log (
+CREATE TABLE IF NOT EXISTS email_log (
     id SERIAL PRIMARY KEY,
     loan_id INTEGER NOT NULL,
     recipient_email VARCHAR(255) NOT NULL,

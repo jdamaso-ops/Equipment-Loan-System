@@ -1,4 +1,4 @@
-CREATE TABLE sms_log (
+CREATE TABLE IF NOT EXISTS sms_log (
     id SERIAL PRIMARY KEY,
     loan_id INTEGER NOT NULL,
     phone_number VARCHAR(20) NOT NULL,

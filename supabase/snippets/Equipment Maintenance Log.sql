@@ -1,4 +1,4 @@
-CREATE TABLE maintenance_log (
+CREATE TABLE IF NOT EXISTS maintenance_log (
     id SERIAL PRIMARY KEY,
     equipment_id INTEGER NOT NULL,
     maintenance_type VARCHAR(100) NOT NULL,
