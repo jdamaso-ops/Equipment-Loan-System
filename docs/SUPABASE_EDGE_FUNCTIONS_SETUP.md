@@ -53,7 +53,6 @@ Create `.env.local` in your project root:
 ```.env
 SUPABASE_URL=your-supabase-url
 SUPABASE_SERVICE_ROLE_KEY=your_service_key
-RESEND_API_KEY=your-resend-api-key
 VONAGE_API_KEY=your-vonage-api-key
 VONAGE_API_SECRET=your-vonage-api-secret
 VONAGE_BRAND_NAME=EquipmentLoanSystem
