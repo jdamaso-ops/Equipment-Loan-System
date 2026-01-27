@@ -9,5 +9,6 @@ CREATE TABLE loans (
     notes TEXT,
     status VARCHAR(20) DEFAULT 'On Loan',
     created_at TIMESTAMP DEFAULT NOW(),
-    FOREIGN KEY (equipment_id) REFERENCES equipment(equipment_id)
+    FOREIGN KEY (equipment_id) REFERENCES equipment(equipment_id) ON DELETE RESTRICT,
+    FOREIGN KEY (student_email) REFERENCES students(email) ON DELETE RESTRICT
 );

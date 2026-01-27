@@ -129,13 +129,27 @@ async function returnEquipment(loanId) {
         // Get loan details
         const { data: loan, error: fetchError } = await supabase
             .from('loans')
-            .select('equipment_id')
+            .select('*')
             .eq('id', loanId)
             .single();
 
         if (fetchError) throw fetchError;
 
-        // Delete loan
+        // Move to loan history
+        const { error: historyError } = await supabase
+            .from('loan_history')
+            .insert([{
+                student_name: loan.student_name,
+                student_email: loan.student_email,
+                equipment_type: loan.equipment_type,
+                equipment_id: loan.equipment_id,
+                checkout_date: loan.checkout_date,
+                return_date: new Date().toISOString().split('T')[0]
+            }]);
+
+        if (historyError) throw historyError;
+
+        // Delete loan after successful history insert
         const { error: deleteError } = await supabase
             .from('loans')
             .delete()

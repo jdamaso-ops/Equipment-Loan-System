@@ -44,7 +44,7 @@ async function handleBarcodeScan(barcode) {
             document.getElementById('scannedId').textContent = equipment.equipment_id;
             document.getElementById('scannedType').textContent = equipment.equipment_type;
             document.getElementById('scannedInfo').style.display = 'block';
-            document.getAnimations('completeCheckout').style.display = 'block';
+            document.getElementById('completeCheckout').style.display = 'block';
 
             // Log Scan
             scanHistory.unshift({
@@ -95,7 +95,7 @@ document.getElementById('completeCheckout')?.addEventListener('click', async () 
         // Update equipment status
         await supabase
             .from('equipment')
-            .update({ status: 'On Loan '})
+            .update({ status: 'On Loan' })
             .eq('equipment_id', scannedEquipmentId);
 
         alert('Equipment checked out successfully!');

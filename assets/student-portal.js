@@ -1,7 +1,7 @@
 const SUPABASE_URL = 'https://zlfiwplfwzukyczvmlvv.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_54ZSuDcBHMTiUwqIuYPHgg_92qQoj2W';
 
-const supabase = window.supabase. createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let currentUser = null;
 
@@ -10,7 +10,7 @@ const loginSection = document.getElementById('loginSection');
 const registerSection = document.getElementById('registerSection');
 const dashboardSection = document.getElementById('dashboardSection');
 const loginForm = document.getElementById('loginForm');
-const registerForm = document. getElementById('registerForm');
+const registerForm = document.getElementById('registerForm');
 const logoutBtn = document.getElementById('logoutBtn');
 
 // Toggle between login and register
@@ -41,7 +41,7 @@ registerForm.addEventListener('submit', async (e) => {
     }
 
     try {
-        const { data, error } = await supabase. auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
             email,
             password,
             options: {
@@ -52,15 +52,15 @@ registerForm.addEventListener('submit', async (e) => {
         if (error) throw error;
 
         // Create student profile
-        await supabase. from('students').insert([{
+        await supabase.from('students').insert([{
             user_id: data.user.id,
             name,
             email
         }]);
 
-        showSuccess('Account created!  Please check your email to verify.');
+        showSuccess('Account created! Please check your email to verify.');
         loginSection.style.display = 'block';
-        registerSection.style. display = 'none';
+        registerSection.style.display = 'none';
         registerForm.reset();
     } catch (error) {
         showError(error.message);
@@ -68,7 +68,7 @@ registerForm.addEventListener('submit', async (e) => {
 });
 
 // Login
-loginForm. addEventListener('submit', async (e) => {
+loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const email = document.getElementById('loginEmail').value;
@@ -84,7 +84,7 @@ loginForm. addEventListener('submit', async (e) => {
 
         currentUser = data.user;
         loginSection.style.display = 'none';
-        dashboardSection. style.display = 'block';
+        dashboardSection.style.display = 'block';
         logoutBtn.style.display = 'inline-block';
 
         loadStudentLoans();
@@ -117,8 +117,8 @@ async function loadStudentLoans() {
         if (error) throw error;
 
         const tbody = document.getElementById('studentLoansBody');
-        if (! loans || loans.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5">No active loans</td></tr>';
+        if (!loans || loans.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5">No active loans</td></tr>';;
             return;
         }
 

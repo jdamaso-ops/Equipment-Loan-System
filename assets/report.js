@@ -50,7 +50,7 @@ async function generateReport() {
 
 async function getAllLoans() {
     const { data } = await supabase
-        . from('loan_history')
+        .from('loan_history')
         .select('*')
         .order('checkout_date', { ascending: false });
     return data || [];
@@ -59,7 +59,7 @@ async function getAllLoans() {
 async function getOverdueLoans() {
     const today = new Date().toISOString().split('T')[0];
     const { data } = await supabase
-        . from('loans')
+        .from('loans')
         .select('*')
         .lt('due_date', today);
     return data || [];
@@ -67,7 +67,7 @@ async function getOverdueLoans() {
 
 async function getLoansByEquipment() {
     const { data } = await supabase
-        . from('loan_history')
+        .from('loan_history')
         .select('*')
         .order('equipment_type');
     return data || [];

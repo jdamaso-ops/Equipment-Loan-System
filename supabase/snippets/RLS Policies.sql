@@ -53,7 +53,7 @@ CREATE POLICY "Students can view own record"
 ON students
 FOR SELECT
 TO authenticated
-USING (user_id = auth.uid() OR email = get_user_email());
+USING (user_id = auth.uid());
 
 -- Students can update their own record (phone number, etc.)
 CREATE POLICY "Students can update own record"
@@ -83,8 +83,8 @@ FOR SELECT
 TO authenticated
 USING (true);
 
--- Allow anonymous users to view available equipment (for student portal)
-CREATE POLICY "Anonymous users can view available equipment"
+-- Allow public to view available equipment (for browsing before login)
+CREATE POLICY "Public can view available equipment"
 ON equipment
 FOR SELECT
 TO anon
@@ -115,6 +115,14 @@ CREATE POLICY "Students can create loan requests"
 ON loans
 FOR INSERT
 TO authenticated
+WITH CHECK (student_email = get_user_email());
+
+-- Students can update their own loans (notes, etc.)
+CREATE POLICY "Students can update own loans"
+ON loans
+FOR UPDATE
+TO authenticated
+USING (student_email = get_user_email())
 WITH CHECK (student_email = get_user_email());
 
 -- =============================================

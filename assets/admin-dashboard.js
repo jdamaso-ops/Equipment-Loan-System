@@ -29,8 +29,8 @@ navButtons.forEach(btn => {
 async function loadOverview() {
     try {
         // Total equipment
-        const { data: allEquip } = await supabase. from('equipment').select('*');
-        document.getElementById('totalEquipment').textContent = allEquip?. length || 0;
+        const { data: allEquip } = await supabase.from('equipment').select('*');
+        document.getElementById('totalEquipment').textContent = allEquip?.length || 0;
 
         // Equipment on loan
         const { data: onLoan } = await supabase
@@ -62,12 +62,12 @@ async function loadOverview() {
             .order('created_at', { ascending: false })
             .limit(5);
 
-        const activityHtml = activity?. map(item => `
+        const activityHtml = activity?.map(item => `
             <tr>
-                <td>${item. student_name}</td>
+                <td>${item.student_name}</td>
                 <td>${item.equipment_type}</td>
                 <td>Checked Out</td>
-                <td>${item.created_at. split('T')[0]}</td>
+                <td>${item.created_at.split('T')[0]}</td>
             </tr>
         `).join('') || '<tr><td colspan="4">No recent activity</td></tr>';
 
@@ -82,7 +82,7 @@ async function loadOverview() {
 async function loadActiveLoans() {
     try {
         const { data: loans } = await supabase
-            . from('loans')
+            .from('loans')
             .select('*')
             .eq('status', 'On Loan')
             .order('due_date', { ascending: true });
@@ -121,7 +121,7 @@ async function loadActiveLoans() {
 async function loadEquipment() {
     try {
         const { data: equipment } = await supabase
-            . from('equipment')
+            .from('equipment')
             .select('*')
             .order('equipment_type');
 
@@ -157,7 +157,7 @@ async function loadStudents() {
             .select('*')
             .order('name');
 
-        const tbody = document. getElementById('studentsTableBody');
+        const tbody = document.getElementById('studentsTableBody');
         if (!students || students.length === 0) {
             tbody.innerHTML = '<tr><td colspan="4">No students</td></tr>';
             return;
@@ -200,7 +200,7 @@ async function returnEquipment(loanId) {
             .eq('id', loanId);
 
         // Move to history
-        await supabase. from('loan_history').insert([{
+        await supabase.from('loan_history').insert([{
             student_email: loan.student_email,
             student_name: loan.student_name,
             equipment_type: loan.equipment_type,
@@ -227,20 +227,17 @@ async function returnEquipment(loanId) {
 async function sendReminder(loanId) {
     try {
         const { data: loan } = await supabase
-            . from('loans')
+            .from('loans')
             .select('*')
             .eq('id', loanId)
             .single();
 
         // Call edge function
-        await fetch('YOUR_SUPABASE_URL/functions/v1/send-reminder-email', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer YOUR_SUPABASE_KEY`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ loanId })
+        const { data, error } = await supabase.functions.invoke('send-reminder-alerts', {
+            body: { loanId }
         });
+
+        if (error) throw error;
 
         alert('Reminder sent to ' + loan.student_name);
 

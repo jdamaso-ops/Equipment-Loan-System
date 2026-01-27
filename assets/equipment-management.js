@@ -6,7 +6,7 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 // Track equipment maintenance history
 async function recordMaintenance(equipmentId, maintenanceType, notes) {
     try {
-        await supabase. from('maintenance_log').insert([{
+        await supabase.from('maintenance_log').insert([{
             equipment_id: equipmentId,
             maintenance_type: maintenanceType,
             notes: notes,
@@ -32,7 +32,7 @@ async function recordMaintenance(equipmentId, maintenanceType, notes) {
 // Get maintenance history for equipment
 async function getMaintenanceHistory(equipmentId) {
     try {
-        const { data:  history } = await supabase
+        const { data: history } = await supabase
             .from('maintenance_log')
             .select('*')
             .eq('equipment_id', equipmentId)
