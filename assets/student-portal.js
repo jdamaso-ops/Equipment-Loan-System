@@ -1,108 +1,141 @@
 const SUPABASE_URL = 'https://zlfiwplfwzukyczvmlvv.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_54ZSuDcBHMTiUwqIuYPHgg_92qQoj2W';
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
+let supabase;
 let currentUser = null;
 
-// DOM Elements
-const loginSection = document.getElementById('loginSection');
-const registerSection = document.getElementById('registerSection');
-const dashboardSection = document.getElementById('dashboardSection');
-const loginForm = document.getElementById('loginForm');
-const registerForm = document.getElementById('registerForm');
-const logoutBtn = document.getElementById('logoutBtn');
+// Initialize Supabase client when library is loaded
+if (window.supabase) {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+}
 
-// Toggle between login and register
-document.getElementById('switchToRegister').addEventListener('click', (e) => {
-    e.preventDefault();
-    loginSection.style.display = 'none';
-    registerSection.style.display = 'block';
-});
-
-document.getElementById('switchToLogin').addEventListener('click', (e) => {
-    e.preventDefault();
-    loginSection.style.display = 'block';
-    registerSection.style.display = 'none';
-});
-
-// Register
-registerForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    // Ensure Supabase is initialized
+    if (!supabase && window.supabase) {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    }
     
-    const name = document.getElementById('registerName').value;
-    const email = document.getElementById('registerEmail').value;
-    const password = document.getElementById('registerPassword').value;
-    const confirm = document.getElementById('registerConfirm').value;
+    // DOM Elements
+    const loginSection = document.getElementById('loginSection');
+    const registerSection = document.getElementById('registerSection');
+    const dashboardSection = document.getElementById('dashboardSection');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const logoutBtn = document.getElementById('logoutBtn');
 
-    if (password !== confirm) {
-        showError('Passwords do not match');
-        return;
+    // Toggle between login and register
+    const switchToRegisterBtn = document.getElementById('switchToRegister');
+    const switchToLoginBtn = document.getElementById('switchToLogin');
+    
+    if (switchToRegisterBtn) {
+        switchToRegisterBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginSection.style.display = 'none';
+            registerSection.style.display = 'block';
+        });
     }
 
-    try {
-        const { data, error } = await supabase.auth.signUp({
-            email,
-            password,
-            options: {
-                data: { full_name: name }
-            }
+    if (switchToLoginBtn) {
+        switchToLoginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginSection.style.display = 'block';
+            registerSection.style.display = 'none';
         });
+    }
 
-        if (error) throw error;
+    // Register
+    registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const name = document.getElementById('registerName').value;
+        const email = document.getElementById('registerEmail').value;
+        const password = document.getElementById('registerPassword').value;
+        const confirm = document.getElementById('registerConfirm').value;
 
-        // Create student profile
-        await supabase.from('students').insert([{
-            user_id: data.user.id,
-            name,
-            email
-        }]);
+        if (password !== confirm) {
+            showError('Passwords do not match');
+            return;
+        }
 
-        showSuccess('Account created! Please check your email to verify.');
+        try {
+            const { data, error } = await supabase.auth.signUp({
+                email,
+                password,
+                options: {
+                    data: { full_name: name }
+                }
+            });
+
+            if (error) throw error;
+
+            // Create student profile
+            await supabase.from('students').insert([{
+                user_id: data.user.id,
+                name,
+                email
+            }]);
+
+            showSuccess('Account created! Please check your email to verify.');
+            loginSection.style.display = 'block';
+            registerSection.style.display = 'none';
+            registerForm.reset();
+        } catch (error) {
+            showError(error.message);
+        }
+    });
+
+    // Login
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+
+        try {
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email,
+                password
+            });
+
+            if (error) throw error;
+
+            currentUser = data.user;
+            loginSection.style.display = 'none';
+            dashboardSection.style.display = 'block';
+            logoutBtn.style.display = 'inline-block';
+
+            loadStudentLoans();
+            loadLoanHistory();
+
+        } catch (error) {
+            showError(error.message);
+        }
+    });
+
+    // Logout
+    logoutBtn.addEventListener('click', async () => {
+        await supabase.auth.signOut();
+        currentUser = null;
         loginSection.style.display = 'block';
-        registerSection.style.display = 'none';
-        registerForm.reset();
-    } catch (error) {
-        showError(error.message);
-    }
-});
+        dashboardSection.style.display = 'none';
+        logoutBtn.style.display = 'none';
+        loginForm.reset();
+    });
 
-// Login
-loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-
-    try {
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email,
-            password
+    // Mobile logout button
+    const logoutBtnMobile = document.getElementById('logoutBtnMobile');
+    if (logoutBtnMobile) {
+        logoutBtnMobile.addEventListener('click', async () => {
+            await supabase.auth.signOut();
+            currentUser = null;
+            loginSection.style.display = 'block';
+            dashboardSection.style.display = 'none';
+            logoutBtn.style.display = 'none';
+            logoutBtnMobile.style.display = 'none';
+            loginForm.reset();
         });
-
-        if (error) throw error;
-
-        currentUser = data.user;
-        loginSection.style.display = 'none';
-        dashboardSection.style.display = 'block';
-        logoutBtn.style.display = 'inline-block';
-
-        loadStudentLoans();
-        loadLoanHistory();
-
-    } catch (error) {
-        showError(error.message);
     }
-});
-
-// Logout
-logoutBtn.addEventListener('click', async () => {
-    await supabase.auth.signOut();
-    currentUser = null;
-    loginSection.style.display = 'block';
-    dashboardSection.style.display = 'none';
-    logoutBtn.style.display = 'none';
-    loginForm.reset();
 });
 
 // Load student's active loans

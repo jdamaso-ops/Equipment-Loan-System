@@ -13,8 +13,18 @@ async function initScanner() {
     codeReader = new ZXing.BrowserMultiFormatReader();
 
     try {
+        // List available video input devices (cameras)
+        const videoInputDevices = await codeReader.listVideoInputDevices();
+        
+        if (videoInputDevices.length === 0) {
+            throw new Error('No camera found on this device');
+        }
+
+        // Use the first available camera (or back camera on mobile if available)
+        const selectedDeviceId = videoInputDevices[0].deviceId;
+
         const result = await codeReader.decodeFromVideoDevice(
-            undefined,
+            selectedDeviceId,
             'video',
             (result, err) => {
                 if (result) {
@@ -24,7 +34,7 @@ async function initScanner() {
         );
     } catch (err) {
         console.error('Error accessing camera:', err);
-        alert('Unable to access camera. Please check permissions.');
+        alert('Unable to access camera. Please check permissions and ensure you are using HTTPS or localhost.');
     }
 }
 

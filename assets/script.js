@@ -2,92 +2,181 @@
 const SUPABASE_URL = 'https://zlfiwplfwzukyczvmlvv.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_54ZSuDcBHMTiUwqIuYPHgg_92qQoj2W';
 
-// Initialize Supabase Client
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// Supabase client will be initialized after library loads
+let supabaseClient;
 
-// DOM Elements
-const checkoutForm = document.getElementById('checkoutForm');
-const successMessage = document.getElementById('successMessage');
-const errorMessage = document.getElementById('errorMessage');
-const errorText = document.getElementById('errorText');
-const loansBody = document.getElementById('loansBody');
+// DOM Elements - these will be populated in DOMContentLoaded
+let checkoutForm;
+let successMessage;
+let errorMessage;
+let errorText;
+let loansBody;
+let equipmentTypeInput;
+let equipmentIdInput;
+let generateIdBtn;
+let mobileMenuBtn;
+let mobileMenu;
 
-// Add Supabase library to page
+// Add Supabase library to page and initialize client
 function loadSupabase() {
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
-    document.head.appendChild(script);
+    return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
+        script.onload = () => {
+            try {
+                if (!window.supabase || !window.supabase.createClient) {
+                    throw new Error('Supabase library failed to attach to window');
+                }
+                // Initialize Supabase Client after library is loaded
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                resolve();
+            } catch (err) {
+                reject(err);
+            }
+        };
+        script.onerror = reject;
+        document.head.appendChild(script);
+    });
+}
+
+// Generate a formatted equipment ID based on type prefix
+function generateEquipmentId() {
+    if (!equipmentTypeInput) return 'EQX-' + Math.floor(100000 + Math.random() * 900000);
+    const type = (equipmentTypeInput.value || 'EQ').replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+    const prefix = (type.slice(0, 3) || 'EQ').padEnd(3, 'X');
+    const suffix = Math.floor(100000 + Math.random() * 900000); // 6-digit random
+    return `${prefix}-${suffix}`;
 }
 
 // Initialize on page load
-document.addEventListener('DOMContentLoaded', () => {
-    loadSupabase();
-    setTimeout(() => {
-        loadActiveLoans();
-     }, 1000); // Wait for Supabase to load
-});
-
-// Handle form submission
-checkoutForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const studentName = document.getElementById('studentName').value;
-    const studentEmail = document.getElementById('studentEmail').value;
-    const equipmentType = document.getElementById('equipmentType').value;
-    const equipmentId = document.getElementById('equipmentId').value;
-    const dueDate = document.getElementById('dueDate').value;
-    const notes = document.getElementById('notes').value;
-
+document.addEventListener('DOMContentLoaded', async () => {
     try {
-        // Insert into loans table
-        const { data: loanData, error: loanError } = await supabase
-            .from('loans')
-            .insert([
-                {
-                    student_name: studentName,
-                    student_email: studentEmail,
-                    equipment_type: equipmentType,
-                    equipment_id: equipmentId,
-                    due_date: dueDate,
-                    notes: notes,
-                    status: 'On Loan',
-                    checkout_date: new Date().toISOString().split('T')[0]
-                }
-            ]);
+        // Initialize all DOM elements
+        checkoutForm = document.getElementById('checkoutForm');
+        successMessage = document.getElementById('successMessage');
+        errorMessage = document.getElementById('errorMessage');
+        errorText = document.getElementById('errorText');
+        loansBody = document.getElementById('loansBody');
+        equipmentTypeInput = document.getElementById('equipmentType');
+        equipmentIdInput = document.getElementById('equipmentId');
+        generateIdBtn = document.getElementById('generateIdBtn');
+        mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        mobileMenu = document.getElementById('mobileMenu');
+
+        // Setup mobile menu toggle
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Close menu when a link is clicked
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+        }
+
+        await loadSupabase();
         
-        if (loanError) throw loanError;
-
-        // Update equipment status
-        const { error: equipmentError } = await supabase
-            .from('equipment')
-            .update({ status: 'On Loan' })
-            .eq('equipment_id', equipmentId);
-        
-        if (equipmentError) throw equipmentError;
-
-        // Show success message
-        successMessage.style.display = 'block';
-        errorMessage.style.display = 'none';
-        checkoutForm.reset();
-
-        // Reload loans
-        setTimeout(() => {
+        // Load active loans if the element exists
+        if (loansBody) {
             loadActiveLoans();
-            successMessage.style.display = 'none';
-        }, 2000);
+        }
+
+        // Wire up the ID generator button
+        if (generateIdBtn && equipmentIdInput) {
+            generateIdBtn.addEventListener('click', () => {
+                equipmentIdInput.value = generateEquipmentId();
+                equipmentIdInput.focus();
+            });
+        }
+
+        // Handle form submission - only after Supabase is loaded
+        if (checkoutForm) {
+            checkoutForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                if (!supabaseClient) {
+                    if (errorText) errorText.textContent = 'Database not initialized';
+                    if (errorMessage) errorMessage.style.display = 'block';
+                    return;
+                }
+
+                const studentName = document.getElementById('studentName').value;
+                const studentEmail = document.getElementById('studentEmail').value;
+                const equipmentType = equipmentTypeInput.value;
+                const equipmentId = equipmentIdInput.value;
+                const dueDate = document.getElementById('dueDate').value;
+                const notes = document.getElementById('notes').value;
+
+                try {
+                    // Insert into loans table
+                    const { data: loanData, error: loanError } = await supabaseClient
+                        .from('loans')
+                        .insert([
+                            {
+                                student_name: studentName,
+                                student_email: studentEmail,
+                                equipment_type: equipmentType,
+                                equipment_id: equipmentId,
+                                due_date: dueDate,
+                                notes: notes,
+                                status: 'On Loan',
+                                checkout_date: new Date().toISOString().split('T')[0]
+                            }
+                        ]);
+                    
+                    if (loanError) throw loanError;
+
+                    // Update equipment status
+                    const { error: equipmentError } = await supabaseClient
+                        .from('equipment')
+                        .update({ status: 'On Loan' })
+                        .eq('equipment_id', equipmentId);
+                    
+                    if (equipmentError) throw equipmentError;
+
+                    // Show success message
+                    if (successMessage) successMessage.style.display = 'block';
+                    if (errorMessage) errorMessage.style.display = 'none';
+                    checkoutForm.reset();
+
+                    // Reload loans
+                    setTimeout(() => {
+                        if (loansBody) loadActiveLoans();
+                        if (successMessage) successMessage.style.display = 'none';
+                    }, 2000);
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    if (errorText) errorText.textContent = error.message;
+                    if (errorMessage) errorMessage.style.display = 'block';
+                    if (successMessage) successMessage.style.display = 'none';
+                }
+            });
+        }
 
     } catch (error) {
-        console.error('Error:', error);
-        errorText.textContent = error.message;
-        errorMessage.style.display = 'block';
-        successMessage.style.display = 'none';
+        console.error('Failed to load Supabase:', error);
+        if (loansBody) {
+            loansBody.innerHTML = `<tr><td colspan="6" class="px-4 py-6 text-center text-red-500">Error loading database connection: ${error.message}</td></tr>`;
+        }
     }
 });
 
 // Load and display active loans
 async function loadActiveLoans() {
+    if (!supabaseClient) {
+        console.error('Supabase not initialized');
+        if (loansBody) {
+            loansBody.innerHTML = `<tr><td colspan="6" class="px-4 py-6 text-center text-red-500">Database not initialized</td></tr>`;
+        }
+        return;
+    }
+
     try {
-        const { data: loans, error } = await supabase
+        const { data: loans, error } = await supabaseClient
             .from('loans')
             .select('*')
             .order('due_date', { ascending: true });
@@ -95,31 +184,33 @@ async function loadActiveLoans() {
         if (error) throw error;
 
         if (! loans || loans.length === 0) {
-            loansBody.innerHTML = `<tr><td colspan="6">No active loans</td></tr>`;
+            loansBody.innerHTML = `<tr><td colspan="6" class="px-4 py-6 text-center text-gray-500">No active loans</td></tr>`;
             return;
         }
 
         loansBody.innerHTML = loans.map(loan => {
             const today = new Date().toISOString().split('T')[0];
             const isOverdue = loan.due_date < today;
-            const statusClass = isOverdue ? 'overdue' : 'on-loan';
+            const statusClass = isOverdue ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800';
             const statusText = isOverdue ? 'Overdue' : 'On Loan';
 
             return `
-                <tr>
-                    <td>${loan.student_name}</td>
-                    <td>${loan.equipment_type}</td>
-                    <td>${loan.equipment_id}</td>
-                    <td>${loan.due_date}</td>
-                    <td><span class="status ${statusClass}">${statusText}</span></td>
-                    <td><button class="btn-small" onclick="returnEquipment(${loan.id})">Return</button></td>
+                <tr class="border-b border-gray-300 hover:bg-gray-50">
+                    <td class="px-4 py-3 text-gray-700">${loan.student_name}</td>
+                    <td class="px-4 py-3 text-gray-700">${loan.equipment_type}</td>
+                    <td class="px-4 py-3 text-gray-700">${loan.equipment_id}</td>
+                    <td class="px-4 py-3 text-gray-700">${loan.due_date}</td>
+                    <td class="px-4 py-3"><span class="inline-block px-2 py-1 rounded text-xs font-semibold ${statusClass}">${statusText}</span></td>
+                    <td class="px-4 py-3"><button class="bg-indigo-600 text-white px-3 py-1 rounded text-sm hover:bg-indigo-700" onclick="returnEquipment(${loan.id})">Return</button></td>
                 </tr>
             `;
         }).join('');
 
     } catch (error) {
         console.error('Error loading loans:', error);
-        loansBody.innerHTML = `<tr><td colspan="6">Error loading loans</td></tr>`;
+        if (loansBody) {
+            loansBody.innerHTML = `<tr><td colspan="6" class="px-4 py-6 text-center text-red-500">Error loading loans: ${error.message}</td></tr>`;
+        }
     }
 }
 
@@ -127,7 +218,7 @@ async function loadActiveLoans() {
 async function returnEquipment(loanId) {
     try {
         // Get loan details
-        const { data: loan, error: fetchError } = await supabase
+        const { data: loan, error: fetchError } = await supabaseClient
             .from('loans')
             .select('*')
             .eq('id', loanId)
@@ -136,7 +227,7 @@ async function returnEquipment(loanId) {
         if (fetchError) throw fetchError;
 
         // Move to loan history
-        const { error: historyError } = await supabase
+        const { error: historyError } = await supabaseClient
             .from('loan_history')
             .insert([{
                 student_name: loan.student_name,
@@ -150,7 +241,7 @@ async function returnEquipment(loanId) {
         if (historyError) throw historyError;
 
         // Delete loan after successful history insert
-        const { error: deleteError } = await supabase
+        const { error: deleteError } = await supabaseClient
             .from('loans')
             .delete()
             .eq('id', loanId);
@@ -158,7 +249,7 @@ async function returnEquipment(loanId) {
         if (deleteError) throw deleteError;
 
         // Update equipment status back to Available
-        const { error: equipmentError } = await supabase
+        const { error: equipmentError } = await supabaseClient
             .from('equipment')
             .update({ status: 'Available' })
             .eq('equipment_id', loan.equipment_id);

@@ -5,24 +5,33 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let currentAdmin = null;
 
-// DOM Elements
-const navButtons = document.querySelectorAll('.nav-btn');
-const tabContents = document.querySelectorAll('.tab-content');
-
 // Tab switching
-navButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-        navButtons.forEach(b => b.classList.remove('active'));
-        tabContents.forEach(t => t.classList.remove('active'));
+document.addEventListener('DOMContentLoaded', () => {
+    // DOM Elements
+    const navButtons = document.querySelectorAll('.nav-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
 
-        btn.classList.add('active');
-        document.getElementById(btn.getAttribute('data-tab') + 'Tab').classList.add('active');
+    navButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            navButtons.forEach(b => b.classList.remove('active', 'bg-white/20'));
+            tabContents.forEach(t => t.classList.add('hidden'));
 
-        if (btn.getAttribute('data-tab') === 'overview') loadOverview();
-        if (btn.getAttribute('data-tab') === 'loans') loadActiveLoans();
-        if (btn.getAttribute('data-tab') === 'equipment') loadEquipment();
-        if (btn.getAttribute('data-tab') === 'students') loadStudents();
+            btn.classList.add('active', 'bg-white/20');
+            const tabId = btn.getAttribute('data-tab') + 'Tab';
+            const tabElement = document.getElementById(tabId);
+            if (tabElement) {
+                tabElement.classList.remove('hidden');
+            }
+
+            if (btn.getAttribute('data-tab') === 'overview') loadOverview();
+            if (btn.getAttribute('data-tab') === 'loans') loadActiveLoans();
+            if (btn.getAttribute('data-tab') === 'equipment') loadEquipment();
+            if (btn.getAttribute('data-tab') === 'students') loadStudents();
+        });
     });
+
+    // Load initial overview
+    loadOverview();
 });
 
 // Load overview stats
