@@ -6,6 +6,19 @@
     <title>Reports - Equipment Loan System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="assets/report.js"></script>
+    <script>
+        // Hamburger menu toggle
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+        });
+    </script>
 </head>
 <body>
         <header class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
@@ -28,63 +41,82 @@
                         <a href="barcode-scanner.html" class="hover:text-indigo-200">Barcode Scanner</a>
                         <a href="reports.html" class="hover:text-indigo-200">Reports</a>
                     </nav>
+
+                    <!-- Hamburger Menu Button -->
+                    <button type="button" id="mobileMenuBtn" class="md:hidden text-white" aria-label="Toggle navigation menu">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
                 </div>
 
-                <!-- Mobile Nav -->
-                <nav aria-label="mobile nav" class="md:hidden mt-4 grid grid-cols-2 gap-3 text-sm font-medium">
-                    <a href="index.html" class="hover:text-indigo-200">Home</a>
-                    <a href="student-portal.html" class="hover:text-indigo-200">Student</a>
-                    <a href="admin-dashboard.html" class="hover:text-indigo-200">Admin</a>
-                    <a href="barcode-scanner.html" class="hover:text-indigo-200">Scanner</a>
-                    <a href="reports.html" class="hover:text-indigo-200">Reports</a>
+                <!-- Mobile Nav Menu -->
+                <nav aria-label="mobile nav" id="mobileMenu" class="hidden md:hidden mt-4 pt-4 border-t border-white/20 space-y-3 text-sm font-medium">
+                    <a href="index.html" class="block hover:text-indigo-200 py-2">Home</a>
+                    <a href="student-portal.html" class="block hover:text-indigo-200 py-2">Student Portal</a>
+                    <a href="admin-dashboard.html" class="block hover:text-indigo-200 py-2">Admin Dashboard</a>
+                    <a href="barcode-scanner.html" class="block hover:text-indigo-200 py-2">Barcode Scanner</a>
+                    <a href="reports.html" class="block hover:text-indigo-200 py-2">Reports</a>
                 </nav>
             </div>
         </header>
 
-        <main>
-            <section>
-                <h2>Report Filters</h2>
-                <div class="form-group">
-                    <label for="reportType">Report Type:</label>
-                    <select id="reportType" onchange="generateReport()">
-                        <option value="all-loans">All Loans</option>
-                        <option value="overdue">Overdue Loans</option>
-                        <option value="by-equipment">By Equipment</option>
-                        <option value="by-student">By Student</option>
-                        <option value="by-date">By Date Range</option>
-                    </select>
-                </div>
+        <main class="max-w-6xl mx-auto px-6 py-10 space-y-8">
+            <section class="bg-white rounded-lg shadow-md p-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Report Filters</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                    <div class="flex flex-col">
+                        <label for="reportType" class="font-semibold text-gray-700 mb-2">Report Type</label>
+                        <select id="reportType" onchange="generateReport()" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200">
+                            <option value="all-loans">All Loans</option>
+                            <option value="overdue">Overdue Loans</option>
+                            <option value="by-equipment">By Equipment</option>
+                            <option value="by-student">By Student</option>
+                            <option value="by-date">By Date Range</option>
+                        </select>
+                    </div>
 
-                <div class="form-group" id="dateRangeGroup" style="display: none;">
-                    <label for="startDate">Start Date:</label>
-                    <input type="date" id="startDate" onchange="generateReport()">
-                    <label for="endDate">End Date:</label>
-                    <input type="date" id="endDate" onchange="generateReport()">
-                </div>
+                    <div id="dateRangeGroup" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:col-span-2" style="display: none;">
+                        <div class="flex flex-col">
+                            <label for="startDate" class="font-semibold text-gray-700 mb-2">Start Date</label>
+                            <input type="date" id="startDate" onchange="generateReport()" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200">
+                        </div>
+                        <div class="flex flex-col">
+                            <label for="endDate" class="font-semibold text-gray-700 mb-2">End Date</label>
+                            <input type="date" id="endDate" onchange="generateReport()" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200">
+                        </div>
+                    </div>
 
-                <button type="submit" class="btn-primary width: auto;" onclick="exportReport()">Export to CSV</button>
+                    <div class="md:col-span-3">
+                        <button type="button" class="bg-indigo-600 text-white px-6 py-3 rounded-md font-semibold hover:bg-indigo-700 transition-colors" onclick="exportReport()">Export to CSV</button>
+                    </div>
+                </div>
             </section>
 
-            <section>
-                <h2 id="reportTitle">All Loans Report</h2>
-                <table id="reportTable">
-                    <thead>
-                        <tr>
-                            <th scope="col">Student</th>
-                            <th scope="col">Equipment</th>
-                            <th scope="col">Checkout</th>
-                            <th scope="col">Return</th>
-                            <th scope="col">Duration</th>
-                        </tr>
-                    </thead>
-                    <tbody id="reportBody">
-                        <tr><td colspan="5">Loading... </td></tr>
-                    </tbody>
-                </table>
+            <section class="bg-white rounded-lg shadow-md p-8">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 id="reportTitle" class="text-2xl font-bold text-gray-800">All Loans Report</h2>
+                </div>
+                <div class="overflow-x-auto">
+                    <table id="reportTable" class="w-full border-collapse">
+                        <thead class="bg-gray-100 border-b-2 border-gray-300">
+                            <tr>
+                                <th scope="col" class="px-4 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wide">Student</th>
+                                <th scope="col" class="px-4 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wide">Equipment</th>
+                                <th scope="col" class="px-4 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wide">Checkout</th>
+                                <th scope="col" class="px-4 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wide">Return</th>
+                                <th scope="col" class="px-4 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wide">Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportBody">
+                            <tr><td colspan="5" class="px-4 py-8 text-center text-gray-500">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </section>
         </main>
 
-        <footer>
+        <footer class="bg-gray-100 mt-8 py-8 px-6 text-center text-sm text-gray-600 border-t border-gray-300">
             <p>&copy; 2026 Josef Michael Damaso. Equipment Loan System. All rights reserved.</p>
         </footer>
 </body>

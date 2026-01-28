@@ -5,7 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Loans - Equipment Loan System</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script src="assets/student-portal.js"></script>
+    <script>
+        // Hamburger menu toggle
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+        });
+    </script>
 </head>
 <body>
         <header class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
@@ -33,108 +47,120 @@
                         <button type="button" id="logoutBtn" class="ml-4 rounded-md bg-white/10 px-3 py-1.5 hover:bg-white/20 transition">Logout</button>
                     </nav>
 
-                    <!-- Mobile Nav -->
-                    <nav aria-label="mobile nav" class="md:hidden mt-4 grid grid-cols-2 gap-3 text-sm font-medium">
-                        <a href="index.html" class="hover:text-indigo-200">Home</a>
-                        <a href="student-portal.html" class="hover:text-indigo-200">Student</a>
-                        <a href="admin-dashboard.html" class="hover:text-indigo-200">Admin</a>
-                        <a href="barcode-scanner.html" class="hover:text-indigo-200">Scanner</a>
-                        <a href="reports.html" class="hover:text-indigo-200">Reports</a>
-                    </nav>
+                    <!-- Hamburger Menu Button -->
+                    <button type="button" id="mobileMenuBtn" class="md:hidden text-white" aria-label="Toggle navigation menu">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
                 </div>
+
+                <!-- Mobile Nav Menu -->
+                <nav aria-label="mobile nav" id="mobileMenu" class="hidden md:hidden mt-4 pt-4 border-t border-white/20 space-y-3 text-sm font-medium">
+                    <a href="index.html" class="block hover:text-indigo-200 py-2">Home</a>
+                    <a href="student-portal.html" class="block hover:text-indigo-200 py-2">Student Portal</a>
+                    <a href="admin-dashboard.html" class="block hover:text-indigo-200 py-2">Admin Dashboard</a>
+                    <a href="barcode-scanner.html" class="block hover:text-indigo-200 py-2">Barcode Scanner</a>
+                    <a href="reports.html" class="block hover:text-indigo-200 py-2">Reports</a>
+                    <button type="button" id="logoutBtnMobile" class="block w-full text-left hover:text-indigo-200 py-2">Logout</button>
+                </nav>
             </div>
         </header>
 
-        <main>
+        <main class="max-w-6xl mx-auto px-6 py-10">
             <!-- Login Section -->
-            <section id="loginSection" class="form-section">
-                <h2>Student Login</h2>
-                <form id="loginForm">
-                    <div class="form-group">
-                        <label for="loginEmail">Email:</label>
-                        <input type="email" id="loginEmail" required>
+            <section id="loginSection" class="bg-white rounded-lg shadow-md p-8 mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-indigo-500 pb-3">Student Login</h2>
+                <form id="loginForm" class="space-y-4">
+                    <div class="flex flex-col">
+                        <label for="loginEmail" class="font-semibold text-gray-700 mb-2">Email</label>
+                        <input type="email" id="loginEmail" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200" required>
                     </div>
-                    <div class="form-group">
-                        <label for="loginPassword">Password:</label>
-                        <input type="password" id="loginPassword" required>
+                    <div class="flex flex-col">
+                        <label for="loginPassword" class="font-semibold text-gray-700 mb-2">Password</label>
+                        <input type="password" id="loginPassword" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200" required>
                     </div>
-                    <button type="submit" class="btn-primary">Login</button>
+                    <button type="submit" class="bg-indigo-600 text-white px-6 py-3 rounded-md font-semibold hover:bg-indigo-700 transition-colors">Login</button>
                 </form>
-                <p class="margin-top: 15px; text-align: center;">
-                    Don't have an account? <a href="#" id="switchToRegister" class="color: #667eea; cursor: pointer;">Register here</a>
-                </p>
+                <p class="text-center text-sm text-gray-600 mt-4">Don't have an account? <a href="#" id="switchToRegister" class="text-indigo-600 hover:text-indigo-700 font-semibold">Register here</a></p>
             </section>
 
             <!-- Register Section (Hidden by default) -->
-            <section id="registerSection" class="form-section" style="display: none;">
-                <h2>Create Account</h2>
-                <form id="registerForm">
-                    <div class="form-group">
-                        <label for="registerName">Full Name:</label>
-                        <input type="text" id="registerName" required>
+            <section id="registerSection" class="bg-white rounded-lg shadow-md p-8 mb-8" style="display: none;">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-indigo-500 pb-3">Create Account</h2>
+                <form id="registerForm" class="space-y-4">
+                    <div class="flex flex-col">
+                        <label for="registerName" class="font-semibold text-gray-700 mb-2">Full Name</label>
+                        <input type="text" id="registerName" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200" required>
                     </div>
-                    <div class="form-group">
-                        <label for="registerEmail">Email:</label>
-                        <input type="email" id="registerEmail" required>
+                    <div class="flex flex-col">
+                        <label for="registerEmail" class="font-semibold text-gray-700 mb-2">Email</label>
+                        <input type="email" id="registerEmail" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200" required>
                     </div>
-                    <div class="form-group">
-                        <label for="registerPassword">Password:</label>
-                        <input type="password" id="registerPassword" required>
+                    <div class="flex flex-col">
+                        <label for="registerPassword" class="font-semibold text-gray-700 mb-2">Password</label>
+                        <input type="password" id="registerPassword" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200" required>
                     </div>
-                    <div class="form-group">
-                        <label for="registerConfirm">Confirm Password:</label>
-                        <input type="password" id="registerConfirm" required>
+                    <div class="flex flex-col">
+                        <label for="registerConfirm" class="font-semibold text-gray-700 mb-2">Confirm Password</label>
+                        <input type="password" id="registerConfirm" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200" required>
                     </div>
-                    <button type="submit" class="btn-primary">Register</button>
+                    <button type="submit" class="bg-indigo-600 text-white px-6 py-3 rounded-md font-semibold hover:bg-indigo-700 transition-colors">Register</button>
                 </form>
-                <p class="margin-top: 15px; text-align: center;">
-                    Already have an account? <a href="#" id="switchToLogin" class="color: #667eea; cursor: pointer;">Login here</a>
-                </p>
+                <p class="text-center text-sm text-gray-600 mt-4">Already have an account? <a href="#" id="switchToLogin" class="text-indigo-600 hover:text-indigo-700 font-semibold">Login here</a></p>
             </section>
 
             <!-- Student Dashboard (Hidden until login) -->
-            <section id="dashboardSection" style="display: none;">
-                <h2>My Active Loans</h2>
-                <table id="studentLoansTable">
-                    <thead>
-                        <tr>
-                            <th scope="col">Equipment</th>
-                            <th scope="col">Serial/ID</th>
-                            <th scope="col">Checkout Date</th>
-                            <th scope="col">Due Date</th>
-                            <th scope="col">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="studentLoansBody">
-                        <tr><td colspan="5">Loading...</td></tr>
-                    </tbody>
-                </table>
+            <section id="dashboardSection" class="space-y-8" style="display: none;">
+                <div class="bg-white rounded-lg shadow-md p-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-indigo-500 pb-3">My Active Loans</h2>
+                    <div class="overflow-x-auto">
+                        <table id="studentLoansTable" class="w-full border-collapse">
+                            <thead class="bg-gray-100 border-b-2 border-gray-300">
+                                <tr>
+                                    <th scope="col" class="px-4 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wide">Equipment</th>
+                                    <th scope="col" class="px-4 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wide">Serial/ID</th>
+                                    <th scope="col" class="px-4 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wide">Checkout Date</th>
+                                    <th scope="col" class="px-4 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wide">Due Date</th>
+                                    <th scope="col" class="px-4 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wide">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentLoansBody">
+                                <tr><td colspan="5" class="px-4 py-8 text-center text-gray-500">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-                <h2 class="margin-top: 40px;">Loan History</h2>
-                <table id="loanHistoryTable">
-                    <thead>
-                        <tr>
-                            <th scope="col">Equipment</th>
-                            <th scope="col">Checkout</th>
-                            <th scope="col">Return Date</th>
-                            <th scope="col">Duration</th>
-                        </tr>
-                    </thead>
-                    <tbody id="historyBody">
-                        <tr><td colspan="4">Loading...</td></tr>
-                    </tbody>
-                </table>
+                <div class="bg-white rounded-lg shadow-md p-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-indigo-500 pb-3">Loan History</h2>
+                    <div class="overflow-x-auto">
+                        <table id="loanHistoryTable" class="w-full border-collapse">
+                            <thead class="bg-gray-100 border-b-2 border-gray-300">
+                                <tr>
+                                    <th scope="col" class="px-4 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wide">Equipment</th>
+                                    <th scope="col" class="px-4 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wide">Checkout</th>
+                                    <th scope="col" class="px-4 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wide">Return Date</th>
+                                    <th scope="col" class="px-4 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wide">Duration</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyBody">
+                                <tr><td colspan="4" class="px-4 py-8 text-center text-gray-500">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </section>
 
-            <div id="successMessage" class="message success" style="display: none;">
+            <div id="successMessage" class="mt-6 p-4 bg-green-100 text-green-800 border-l-4 border-green-500 rounded" style="display: none;">
                 ✓ <span id="successText"></span>
             </div>
-            <div id="errorMessage" class="message error" style="display:  none;">
+            <div id="errorMessage" class="mt-6 p-4 bg-red-100 text-red-800 border-l-4 border-red-500 rounded" style="display: none;">
                 ✗ Error: <span id="errorText"></span>
             </div>
         </main>
 
-        <footer>
+        <footer class="bg-gray-100 mt-8 py-8 px-6 text-center text-sm text-gray-600 border-t border-gray-300">
             <p>&copy; 2026 Josef Michael Damaso. Equipment Loan System. All rights reserved.</p>
         </footer>
 </body>
