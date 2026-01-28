@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration - Equipment Loan System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body class="bg-gray-50">
+    <header class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
+        <div class="max-w-7xl mx-auto px-6 py-5">
+            <div class="text-center">
+                <h1 class="text-xl md:text-2xl font-bold">
+                    Equipment Loan System
+                </h1>
+                <p class="text-xs md:text-sm text-indigo-100">
+                    Student Registration
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-md mx-auto px-6 py-16">
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2 text-center">Create Account</h2>
+            <p class="text-gray-600 text-center mb-8">Join our equipment loan system</p>
+
+            <form id="registerForm" class="space-y-5">
+                <div class="flex flex-col">
+                    <label for="registerName" class="font-semibold text-gray-700 mb-2">Full Name</label>
+                    <input type="text" id="registerName" class="px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition" placeholder="John Doe" required>
+                </div>
+
+                <div class="flex flex-col">
+                    <label for="registerEmail" class="font-semibold text-gray-700 mb-2">Email Address</label>
+                    <input type="email" id="registerEmail" class="px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition" placeholder="your.email@example.com" required>
+                </div>
+
+                <div class="flex flex-col">
+                    <label for="registerPassword" class="font-semibold text-gray-700 mb-2">Password</label>
+                    <input type="password" id="registerPassword" class="px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition" placeholder="Create a strong password" required>
+                </div>
+
+                <div class="flex flex-col">
+                    <label for="registerConfirm" class="font-semibold text-gray-700 mb-2">Confirm Password</label>
+                    <input type="password" id="registerConfirm" class="px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition" placeholder="Re-enter your password" required>
+                </div>
+
+                <button type="submit" class="w-full bg-indigo-600 text-white px-6 py-3 rounded-md font-semibold hover:bg-indigo-700 transition-colors shadow-md">
+                    Create Account
+                </button>
+            </form>
+
+            <div class="mt-6 text-center">
+                <p class="text-sm text-gray-600">
+                    Already have an account?
+                    <a href="login.html" class="text-indigo-600 hover:text-indigo-700 font-semibold">Sign in here</a>
+                </p>
+            </div>
+
+            <div id="successMessage" class="mt-6 p-4 bg-green-100 text-green-800 border-l-4 border-green-500 rounded" style="display: none;">
+                ✓ <span id="successText"></span>
+            </div>
+            <div id="errorMessage" class="mt-6 p-4 bg-red-100 text-red-800 border-l-4 border-red-500 rounded" style="display: none;">
+                ✗ <span id="errorText"></span>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-100 mt-8 py-8 px-6 text-center text-sm text-gray-600 border-t border-gray-300">
+        <p>&copy; 2026 Josef Michael Damaso. Equipment Loan System. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const SUPABASE_URL = 'https://zlfiwplfwzukyczvmlvv.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_54ZSuDcBHMTiUwqIuYPHgg_92qQoj2W';
+
+        let supabase;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize Supabase
+            if (window.supabase) {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            }
+
+            // Handle registration
+            const registerForm = document.getElementById('registerForm');
+            registerForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const name = document.getElementById('registerName').value;
+                const email = document.getElementById('registerEmail').value;
+                const password = document.getElementById('registerPassword').value;
+                const confirm = document.getElementById('registerConfirm').value;
+
+                // Validate passwords match
+                if (password !== confirm) {
+                    document.getElementById('errorText').textContent = 'Passwords do not match';
+                    document.getElementById('errorMessage').style.display = 'block';
+                    document.getElementById('successMessage').style.display = 'none';
+                    return;
+                }
+
+                try {
+                    const { data, error } = await supabase.auth.signUp({
+                        email,
+                        password,
+                        options: {
+                            data: { full_name: name }
+                        }
+                    });
+
+                    if (error) throw error;
+
+                    // Create student profile
+                    if (data.user) {
+                        await supabase.from('students').insert([{
+                            user_id: data.user.id,
+                            name,
+                            email
+                        }]);
+                    }
+
+                    // Show success message
+                    document.getElementById('successText').textContent = 'Account created successfully! Please check your email to verify your account.';
+                    document.getElementById('successMessage').style.display = 'block';
+                    document.getElementById('errorMessage').style.display = 'none';
+                    registerForm.reset();
+
+                    // Redirect to login after 3 seconds
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 3000);
+
+                } catch (error) {
+                    document.getElementById('errorText').textContent = error.message;
+                    document.getElementById('errorMessage').style.display = 'block';
+                    document.getElementById('successMessage').style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
