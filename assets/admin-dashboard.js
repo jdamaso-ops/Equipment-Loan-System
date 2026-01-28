@@ -1,7 +1,12 @@
 const SUPABASE_URL = 'https://zlfiwplfwzukyczvmlvv.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_54ZSuDcBHMTiUwqIuYPHgg_92qQoj2W';
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let supabase;
+
+// Initialize Supabase client when library is loaded
+if (window.supabase) {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+}
 
 let currentAdmin = null;
 
