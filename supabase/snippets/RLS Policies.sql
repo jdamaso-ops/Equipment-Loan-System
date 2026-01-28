@@ -41,6 +41,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 ALTER TABLE students ENABLE ROW LEVEL SECURITY;
 
 -- Admins can do everything
+DROP POLICY IF EXISTS "Admins have full access to students" ON students;
 CREATE POLICY "Admins have full access to students"
 ON students
 FOR ALL
@@ -49,6 +50,7 @@ USING (is_admin())
 WITH CHECK (is_admin());
 
 -- Students can view their own record
+DROP POLICY IF EXISTS "Students can view own record" ON students;
 CREATE POLICY "Students can view own record"
 ON students
 FOR SELECT
@@ -56,6 +58,7 @@ TO authenticated
 USING (user_id = auth.uid());
 
 -- Students can update their own record (phone number, etc.)
+DROP POLICY IF EXISTS "Students can update own record" ON students;
 CREATE POLICY "Students can update own record"
 ON students
 FOR UPDATE
@@ -69,6 +72,7 @@ WITH CHECK (user_id = auth.uid());
 ALTER TABLE equipment ENABLE ROW LEVEL SECURITY;
 
 -- Admins have full access
+DROP POLICY IF EXISTS "Admins have full access to equipment" ON equipment;
 CREATE POLICY "Admins have full access to equipment"
 ON equipment
 FOR ALL
@@ -77,6 +81,7 @@ USING (is_admin())
 WITH CHECK (is_admin());
 
 -- All authenticated users can view equipment
+DROP POLICY IF EXISTS "Authenticated users can view equipment" ON equipment;
 CREATE POLICY "Authenticated users can view equipment"
 ON equipment
 FOR SELECT
@@ -84,6 +89,7 @@ TO authenticated
 USING (true);
 
 -- Allow public to view available equipment (for browsing before login)
+DROP POLICY IF EXISTS "Public can view available equipment" ON equipment;
 CREATE POLICY "Public can view available equipment"
 ON equipment
 FOR SELECT
@@ -96,6 +102,7 @@ USING (status = 'Available');
 ALTER TABLE loans ENABLE ROW LEVEL SECURITY;
 
 -- Admins have full access
+DROP POLICY IF EXISTS "Admins have full access to loans" ON loans;
 CREATE POLICY "Admins have full access to loans"
 ON loans
 FOR ALL
@@ -104,6 +111,7 @@ USING (is_admin())
 WITH CHECK (is_admin());
 
 -- Students can view their own loans
+DROP POLICY IF EXISTS "Students can view own loans" ON loans;
 CREATE POLICY "Students can view own loans"
 ON loans
 FOR SELECT
@@ -111,6 +119,7 @@ TO authenticated
 USING (student_email = get_user_email());
 
 -- Students can create loan requests (checkout)
+DROP POLICY IF EXISTS "Students can create loan requests" ON loans;
 CREATE POLICY "Students can create loan requests"
 ON loans
 FOR INSERT
@@ -118,6 +127,7 @@ TO authenticated
 WITH CHECK (student_email = get_user_email());
 
 -- Students can update their own loans (notes, etc.)
+DROP POLICY IF EXISTS "Students can update own loans" ON loans;
 CREATE POLICY "Students can update own loans"
 ON loans
 FOR UPDATE
@@ -131,6 +141,7 @@ WITH CHECK (student_email = get_user_email());
 ALTER TABLE loan_history ENABLE ROW LEVEL SECURITY;
 
 -- Admins have full access
+DROP POLICY IF EXISTS "Admins have full access to loan_history" ON loan_history;
 CREATE POLICY "Admins have full access to loan_history"
 ON loan_history
 FOR ALL
@@ -139,6 +150,7 @@ USING (is_admin())
 WITH CHECK (is_admin());
 
 -- Students can view their own loan history
+DROP POLICY IF EXISTS "Students can view own loan history" ON loan_history;
 CREATE POLICY "Students can view own loan history"
 ON loan_history
 FOR SELECT
@@ -151,6 +163,7 @@ USING (student_email = get_user_email());
 ALTER TABLE maintenance_log ENABLE ROW LEVEL SECURITY;
 
 -- Only admins can access maintenance logs
+DROP POLICY IF EXISTS "Admins have full access to maintenance_log" ON maintenance_log;
 CREATE POLICY "Admins have full access to maintenance_log"
 ON maintenance_log
 FOR ALL
@@ -164,6 +177,7 @@ WITH CHECK (is_admin());
 ALTER TABLE email_log ENABLE ROW LEVEL SECURITY;
 
 -- Only admins can manage email logs
+DROP POLICY IF EXISTS "Admins have full access to email_log" ON email_log;
 CREATE POLICY "Admins have full access to email_log"
 ON email_log
 FOR ALL
@@ -172,6 +186,7 @@ USING (is_admin())
 WITH CHECK (is_admin());
 
 -- Students can view their own email logs
+DROP POLICY IF EXISTS "Students can view own email logs" ON email_log;
 CREATE POLICY "Students can view own email logs"
 ON email_log
 FOR SELECT
@@ -184,6 +199,7 @@ USING (recipient_email = get_user_email());
 ALTER TABLE sms_log ENABLE ROW LEVEL SECURITY;
 
 -- Only admins can manage SMS logs
+DROP POLICY IF EXISTS "Admins have full access to sms_log" ON sms_log;
 CREATE POLICY "Admins have full access to sms_log"
 ON sms_log
 FOR ALL
@@ -192,6 +208,7 @@ USING (is_admin())
 WITH CHECK (is_admin());
 
 -- Students can view their own SMS logs (via loan association)
+DROP POLICY IF EXISTS "Students can view own sms logs" ON sms_log;
 CREATE POLICY "Students can view own sms logs"
 ON sms_log
 FOR SELECT
@@ -210,6 +227,7 @@ USING (
 ALTER TABLE admins ENABLE ROW LEVEL SECURITY;
 
 -- Only existing admins can view/manage admins
+DROP POLICY IF EXISTS "Admins can view admin list" ON admins;
 CREATE POLICY "Admins can view admin list"
 ON admins
 FOR SELECT
@@ -217,6 +235,7 @@ TO authenticated
 USING (is_admin());
 
 -- Only admins can add new admins
+DROP POLICY IF EXISTS "Admins can manage admin list" ON admins;
 CREATE POLICY "Admins can manage admin list"
 ON admins
 FOR ALL
