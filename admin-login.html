@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Equipment Loan System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body class="bg-gray-900">
+    <header class="bg-gradient-to-r from-gray-800 to-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-6 py-5">
+            <div class="text-center">
+                <h1 class="text-xl md:text-2xl font-bold">
+                    Equipment Loan System
+                </h1>
+                <p class="text-xs md:text-sm text-gray-400">
+                    Administrator Access Only
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-md mx-auto px-6 py-16">
+        <div class="bg-gray-800 rounded-lg shadow-2xl p-8 border border-gray-700">
+            <div class="text-center mb-8">
+                <svg class="w-16 h-16 mx-auto text-red-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+                <h2 class="text-3xl font-bold text-white mb-2">Admin Login</h2>
+                <p class="text-gray-400">Authorized personnel only</p>
+            </div>
+
+            <form id="adminLoginForm" class="space-y-5">
+                <div class="flex flex-col">
+                    <label for="adminEmail" class="font-semibold text-gray-300 mb-2">Admin Email</label>
+                    <input type="email" id="adminEmail" class="px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-md focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500 transition" placeholder="admin@example.com" required>
+                </div>
+
+                <div class="flex flex-col">
+                    <label for="adminPassword" class="font-semibold text-gray-300 mb-2">Admin Password</label>
+                    <input type="password" id="adminPassword" class="px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-md focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500 transition" placeholder="Enter admin password" required>
+                </div>
+
+                <button type="submit" class="w-full bg-red-600 text-white px-6 py-3 rounded-md font-semibold hover:bg-red-700 transition-colors shadow-md">
+                    Access Admin Panel
+                </button>
+            </form>
+
+            <div class="mt-6 text-center">
+                <a href="login.html" class="text-sm text-gray-400 hover:text-gray-300">← Back to Student Login</a>
+            </div>
+
+            <div id="errorMessage" class="mt-6 p-4 bg-red-900/50 text-red-300 border-l-4 border-red-500 rounded" style="display: none;">
+                ✗ <span id="errorText"></span>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-900 mt-8 py-8 px-6 text-center text-sm text-gray-500 border-t border-gray-800">
+        <p>&copy; 2026 Josef Michael Damaso. Equipment Loan System. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const SUPABASE_URL = 'https://zlfiwplfwzukyczvmlvv.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_54ZSuDcBHMTiUwqIuYPHgg_92qQoj2W';
+        
+        // Admin credentials - Change these to your own secure credentials
+        const ADMIN_EMAIL = 'admin@equipmentloan.com';
+        const ADMIN_PASSWORD = 'Kirin_Void';
+
+        let supabaseClient;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Admin login page loaded');
+            console.log('Supabase library available:', !!window.supabase);
+            
+            // Initialize Supabase
+            if (window.supabase) {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                console.log('Supabase client initialized');
+            } else {
+                console.error('Supabase library not loaded!');
+            }
+
+            // Check if already logged in as admin
+            supabaseClient.auth.getSession().then(({ data: { session } }) => {
+                if (session) {
+                    // Check if user is admin
+                    const isAdmin = session.user.email === ADMIN_EMAIL;
+                    if (isAdmin) {
+                        window.location.href = 'admin-dashboard.html';
+                    }
+                }
+            });
+
+            // Handle admin login
+            const adminLoginForm = document.getElementById('adminLoginForm');
+            console.log('Login form found:', !!adminLoginForm);
+            
+            adminLoginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                console.log('Form submitted');
+
+                const email = document.getElementById('adminEmail').value;
+                const password = document.getElementById('adminPassword').value;
+                
+                console.log('Entered email:', email);
+                console.log('Expected email:', ADMIN_EMAIL);
+
+                // Validate admin credentials
+                if (email !== ADMIN_EMAIL || password !== ADMIN_PASSWORD) {
+                    console.log('Credentials do not match');
+                    document.getElementById('errorText').textContent = 'Invalid admin credentials. Access denied.';
+                    document.getElementById('errorMessage').style.display = 'block';
+                    return;
+                }
+                
+                console.log('Credentials match, attempting Supabase login...');
+
+                try {
+                    // Try to sign in with Supabase
+                    const { data, error } = await supabaseClient.auth.signInWithPassword({
+                        email,
+                        password
+                    });
+                    
+                    console.log('Sign in result:', { data, error });
+
+                    if (error) {
+                        console.log('Sign in error, checking if we need to create account');
+                        // If user doesn't exist in Supabase, create admin account
+                        if (error.message.includes('Invalid login credentials')) {
+                            console.log('Creating new admin account...');
+                            const { data: signUpData, error: signUpError } = await supabaseClient.auth.signUp({
+                                email,
+                                password,
+                                options: {
+                                    data: { 
+                                        full_name: 'System Administrator',
+                                        role: 'admin'
+                                    }
+                                }
+                            });
+                            
+                            console.log('Sign up result:', { signUpData, signUpError });
+
+                            if (signUpError) throw signUpError;
+
+                            // Sign in after signup
+                            console.log('Signing in after account creation...');
+                            const { data: signInData, error: signInError } = await supabaseClient.auth.signInWithPassword({
+                                email,
+                                password
+                            });
+                            
+                            console.log('Post-signup sign in result:', { signInData, signInError });
+
+                            if (signInError) throw signInError;
+                        } else {
+                            throw error;
+                        }
+                    }
+
+                    // Store admin status
+                    localStorage.setItem('isAdmin', 'true');
+                    console.log('Admin status stored, redirecting...');
+                    
+                    // Redirect to admin dashboard
+                    window.location.href = 'admin-dashboard.html';
+
+                } catch (error) {
+                    console.error('Login error:', error);
+                    document.getElementById('errorText').textContent = error.message;
+                    document.getElementById('errorMessage').style.display = 'block';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

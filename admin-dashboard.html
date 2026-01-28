@@ -10,12 +10,18 @@
         // Authentication guard
         const SUPABASE_URL = 'https://zlfiwplfwzukyczvmlvv.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_54ZSuDcBHMTiUwqIuYPHgg_92qQoj2W';
+        const ADMIN_EMAIL = 'admin@equipmentloan.com';
         
         document.addEventListener('DOMContentLoaded', async () => {
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
             const { data: { session } } = await supabase.auth.getSession();
-            if (!session) {
-                window.location.href = 'login.html';
+            
+            // Check if logged in and is admin
+            const isAdmin = localStorage.getItem('isAdmin') === 'true';
+            
+            if (!session || !isAdmin || session.user.email !== ADMIN_EMAIL) {
+                localStorage.removeItem('isAdmin');
+                window.location.href = 'admin-login.html';
             }
         });
     </script>
