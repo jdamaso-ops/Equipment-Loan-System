@@ -57,16 +57,17 @@ GitHub Pages automatically deploys whenever you push to `main` branch. No workfl
 
 Once deployed, your app will be available at:
 
-```
+```link
 https://voidkirin026-tech.github.io/Equipment-Loan-System/
 ```
 
 Direct login page:
 
-```
+```link
 https://voidkirin026-tech.github.io/Equipment-Loan-System/login.html
 ```
-6. Save
+
+1. Save
 
 ### Browser Console CORS Note
 
