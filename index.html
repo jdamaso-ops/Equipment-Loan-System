@@ -26,8 +26,19 @@
         });
     </script>
     <script>
-        // Hamburger menu toggle
+        // Hamburger menu toggle and logout
         document.addEventListener('DOMContentLoaded', () => {
+            const SUPABASE_URL = 'https://zlfiwplfwzukyczvmlvv.supabase.co';
+            const SUPABASE_KEY = 'sb_publishable_54ZSuDcBHMTiUwqIuYPHgg_92qQoj2W';
+            const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+                auth: {
+                    persistSession: true,
+                    storageKey: 'equipment-loan-auth',
+                    storage: window.localStorage
+                }
+            });
+
+            // Hamburger menu
             const mobileMenuBtn = document.getElementById('mobileMenuBtn');
             const mobileMenu = document.getElementById('mobileMenu');
             
@@ -35,6 +46,23 @@
                 mobileMenuBtn.addEventListener('click', () => {
                     mobileMenu.classList.toggle('hidden');
                 });
+            }
+
+            // Logout buttons
+            const logoutBtn = document.getElementById('logoutBtn');
+            const logoutBtnMobile = document.getElementById('logoutBtnMobile');
+
+            async function handleLogout() {
+                await supabaseClient.auth.signOut();
+                localStorage.removeItem('isAdmin');
+                window.location.href = 'login.html';
+            }
+
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', handleLogout);
+            }
+            if (logoutBtnMobile) {
+                logoutBtnMobile.addEventListener('click', handleLogout);
             }
         });
     </script>
@@ -54,9 +82,10 @@
                     </div>
 
                     <!-- Desktop Nav -->
-                    <nav aria-label="desktop nav" class="hidden md:flex space-x-6 font-medium">
+                    <nav aria-label="desktop nav" class="hidden md:flex items-center space-x-6 font-medium">
                         <a href="index.html" class="hover:text-indigo-200">Borrow Equipment</a>
                         <a href="student-portal.html" class="hover:text-indigo-200">My Loans</a>
+                        <button type="button" id="logoutBtn" class="ml-4 rounded-md bg-white/10 px-3 py-1.5 hover:bg-white/20 transition">Logout</button>
                     </nav>
 
                     <!-- Hamburger Menu Button -->
@@ -71,6 +100,7 @@
                 <nav aria-label="mobile nav" id="mobileMenu" class="hidden md:hidden mt-4 pt-4 border-t border-white/20 space-y-3 text-sm font-medium">
                     <a href="index.html" class="block hover:text-indigo-200 py-2">Borrow Equipment</a>
                     <a href="student-portal.html" class="block hover:text-indigo-200 py-2">My Loans</a>
+                    <button type="button" id="logoutBtnMobile" class="block w-full text-left hover:text-indigo-200 py-2">Logout</button>
                 </nav>
             </div>
         </header>
