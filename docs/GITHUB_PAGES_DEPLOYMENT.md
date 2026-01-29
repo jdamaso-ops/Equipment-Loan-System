@@ -2,7 +2,7 @@
 
 ## GitHub Pages Deployment
 
-Your Equipment Loan System is now configured for GitHub Pages deployment.
+Your Equipment Loan System deploys directly from the main branch to GitHub Pages.
 
 ### Important Notes
 
@@ -17,43 +17,55 @@ Your Equipment Loan System is now configured for GitHub Pages deployment.
 
 4. **What Does NOT Get Deployed**:
    - `supabase/` folder (stays in your Supabase project)
-   - `docs/` folder (documentation only)
    - `node_modules/` (if you add any)
 
-### Automatic Deployment
+### Enable GitHub Pages (One-Time Setup)
 
-The GitHub Actions workflow (`.github/workflows/deploy.yml`) automatically deploys your application whenever you push to the `main` branch.
+**REQUIRED - Do this now:**
 
-### Manual Deployment Steps
+1. Go to your repository: `https://github.com/voidkirin026-tech/Equipment-Loan-System`
+2. Click **Settings** (top menu)
+3. Click **Pages** (left sidebar)
+4. Under "Build and deployment":
+   - **Source**: Select "Deploy from a branch"
+   - **Branch**: Select `main` and `/ (root)`
+   - Click **Save**
+5. Wait 1-2 minutes for deployment
+
+### Deployment Process
+
+GitHub Pages automatically deploys whenever you push to `main` branch. No workflow needed!
+
+### How to Deploy Updates
 
 1. **Commit your changes**:
+
    ```bash
    git add .
    git commit -m "Update Equipment Loan System"
    ```
 
 2. **Push to GitHub**:
+
    ```bash
    git push origin main
    ```
 
-3. **GitHub Pages will automatically deploy** (takes 1-2 minutes)
+3. **GitHub Pages automatically redeploys** (takes 30 seconds - 2 minutes)
 
 ### Access Your Deployed Site
 
 Once deployed, your app will be available at:
+
 ```
 https://voidkirin026-tech.github.io/Equipment-Loan-System/
 ```
 
-### Enable GitHub Pages in Repository Settings
+Direct login page:
 
-If not already enabled:
-1. Go to your GitHub repository
-2. Settings → Pages
-3. Source: Deploy from a branch
-4. Branch: `gh-pages` (should be auto-created)
-5. Folder: `/ (root)`
+```
+https://voidkirin026-tech.github.io/Equipment-Loan-System/login.html
+```
 6. Save
 
 ### Browser Console CORS Note
@@ -63,17 +75,20 @@ Your Supabase credentials (SUPABASE_URL and SUPABASE_KEY) are publicly visible i
 ### Troubleshooting
 
 **Issue**: Site returns 404 after deployment
+
 - **Solution**: Make sure GitHub Pages is enabled and the branch is set to `gh-pages`
 
 **Issue**: Supabase API errors
+
 - **Solution**: Verify your SUPABASE_URL and SUPABASE_KEY are correct in the HTML files
 
 **Issue**: Admin login not working
+
 - **Solution**: Ensure localStorage is enabled in your browser settings
 
 ## File Structure for GitHub Pages
 
-```
+```dir
 Equipment-Loan-System/
 ├── index.html                 ← Main entry point
 ├── login.html                 ← Student login
