@@ -66,16 +66,22 @@
         const SUPABASE_URL = 'https://zlfiwplfwzukyczvmlvv.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_54ZSuDcBHMTiUwqIuYPHgg_92qQoj2W';
 
-        let supabase;
+        let supabaseClient;
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialize Supabase
+            // Initialize Supabase with session persistence
             if (window.supabase) {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+                    auth: {
+                        persistSession: true,
+                        storageKey: 'equipment-loan-auth',
+                        storage: window.localStorage
+                    }
+                });
             }
 
             // Check if already logged in
-            supabase.auth.getSession().then(({ data: { session } }) => {
+            supabaseClient.auth.getSession().then(({ data: { session } }) => {
                 if (session) {
                     window.location.href = 'student-portal.html';
                 }
@@ -90,7 +96,7 @@
                 const password = document.getElementById('loginPassword').value;
 
                 try {
-                    const { data, error } = await supabase.auth.signInWithPassword({
+                    const { data, error } = await supabaseClient.auth.signInWithPassword({
                         email,
                         password
                     });

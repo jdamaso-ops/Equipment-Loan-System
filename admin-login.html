@@ -75,9 +75,15 @@
             console.log('Admin login page loaded');
             console.log('Supabase library available:', !!window.supabase);
             
-            // Initialize Supabase
+            // Initialize Supabase with session persistence
             if (window.supabase) {
-                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+                    auth: {
+                        persistSession: true,
+                        storageKey: 'equipment-loan-auth',
+                        storage: window.localStorage
+                    }
+                });
                 console.log('Supabase client initialized');
             } else {
                 console.error('Supabase library not loaded!');

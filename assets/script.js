@@ -27,8 +27,14 @@ function loadSupabase() {
                 if (!window.supabase || !window.supabase.createClient) {
                     throw new Error('Supabase library failed to attach to window');
                 }
-                // Initialize Supabase Client after library is loaded
-                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                // Initialize Supabase Client with session persistence
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+                    auth: {
+                        persistSession: true,
+                        storageKey: 'equipment-loan-auth',
+                        storage: window.localStorage
+                    }
+                });
                 resolve();
             } catch (err) {
                 reject(err);

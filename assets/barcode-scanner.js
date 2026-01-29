@@ -3,10 +3,18 @@ const SUPABASE_KEY = 'sb_publishable_54ZSuDcBHMTiUwqIuYPHgg_92qQoj2W'
 
 let supabase;
 
-// Initialize Supabase client when library is loaded
-if (window.supabase) {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-}
+// Initialize Supabase client with session persistence
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.supabase) {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+            auth: {
+                persistSession: true,
+                storageKey: 'equipment-loan-auth',
+                storage: window.localStorage
+            }
+        });
+    }
+});
 
 let codeReader;
 let scannedEquipmentId = null;

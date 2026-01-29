@@ -3,15 +3,21 @@ const SUPABASE_KEY = 'sb_publishable_54ZSuDcBHMTiUwqIuYPHgg_92qQoj2W';
 
 let supabase;
 
-// Initialize Supabase client when library is loaded
-if (window.supabase) {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-}
-
 let currentAdmin = null;
 
 // Tab switching
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize Supabase with session persistence
+    if (window.supabase) {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+            auth: {
+                persistSession: true,
+                storageKey: 'equipment-loan-auth',
+                storage: window.localStorage
+            }
+        });
+    }
+    
     // DOM Elements
     const navButtons = document.querySelectorAll('.nav-btn');
     const tabContents = document.querySelectorAll('.tab-content');

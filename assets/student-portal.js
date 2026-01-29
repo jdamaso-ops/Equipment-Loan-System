@@ -4,16 +4,17 @@ const SUPABASE_KEY = 'sb_publishable_54ZSuDcBHMTiUwqIuYPHgg_92qQoj2W';
 let supabase;
 let currentUser = null;
 
-// Initialize Supabase client when library is loaded
-if (window.supabase) {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-}
-
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    // Ensure Supabase is initialized
-    if (!supabase && window.supabase) {
-        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    // Initialize Supabase with session persistence
+    if (window.supabase) {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+            auth: {
+                persistSession: true,
+                storageKey: 'equipment-loan-auth',
+                storage: window.localStorage
+            }
+        });
     }
     
     // Check if user is logged in

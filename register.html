@@ -79,9 +79,15 @@
         let supabase;
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialize Supabase
+            // Initialize Supabase with session persistence
             if (window.supabase) {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+                    auth: {
+                        persistSession: true,
+                        storageKey: 'equipment-loan-auth',
+                        storage: window.localStorage
+                    }
+                });
             }
 
             // Handle registration
