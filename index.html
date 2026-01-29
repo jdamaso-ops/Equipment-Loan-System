@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Equipment Checkout - Admin</title>
+    <title>Equipment Checkout</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script>
-        // Admin authentication guard
+        // Authentication guard - ANY logged in user can access
         const SUPABASE_URL = 'https://zlfiwplfwzukyczvmlvv.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_54ZSuDcBHMTiUwqIuYPHgg_92qQoj2W';
-        const ADMIN_EMAIL = 'admin@equipmentloan.com';
         
         document.addEventListener('DOMContentLoaded', async () => {
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
@@ -21,10 +20,8 @@
                 }
             });
             const { data: { session } } = await supabase.auth.getSession();
-            const isAdmin = localStorage.getItem('isAdmin') === 'true';
-            
-            if (!session || !isAdmin || session.user.email !== ADMIN_EMAIL) {
-                window.location.href = 'admin-login.html';
+            if (!session) {
+                window.location.href = 'login.html';
             }
         });
     </script>
@@ -43,12 +40,10 @@
                         </p>
                     </div>
 
-                    <!-- Desktop Nav - Admin Only -->
+                    <!-- Desktop Nav - For All Logged In Users -->
                     <nav aria-label="desktop nav" class="hidden md:flex space-x-6 font-medium">
                         <a href="index.html" class="hover:text-indigo-200">Checkout</a>
-                        <a href="admin-dashboard.html" class="hover:text-indigo-200">Dashboard</a>
-                        <a href="barcode-scanner.html" class="hover:text-indigo-200">Scanner</a>
-                        <a href="reports.html" class="hover:text-indigo-200">Reports</a>
+                        <a href="student-portal.html" class="hover:text-indigo-200">My Loans</a>
                     </nav>
 
                     <!-- Hamburger Menu Button -->
@@ -59,12 +54,10 @@
                     </button>
                 </div>
 
-                <!-- Mobile Nav Menu - Admin Only -->
+                <!-- Mobile Nav Menu - For All Logged In Users -->
                 <nav aria-label="mobile nav" id="mobileMenu" class="hidden md:hidden mt-4 pt-4 border-t border-white/20 space-y-3 text-sm font-medium">
                     <a href="index.html" class="block hover:text-indigo-200 py-2">Checkout</a>
-                    <a href="admin-dashboard.html" class="block hover:text-indigo-200 py-2">Dashboard</a>
-                    <a href="barcode-scanner.html" class="block hover:text-indigo-200 py-2">Scanner</a>
-                    <a href="reports.html" class="block hover:text-indigo-200 py-2">Reports</a>
+                    <a href="student-portal.html" class="block hover:text-indigo-200 py-2">My Loans</a>
                 </nav>
             </div>
         </header>
