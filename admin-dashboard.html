@@ -7,13 +7,19 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script>
-        // Authentication guard
+        // Admin authentication guard
         const SUPABASE_URL = 'https://zlfiwplfwzukyczvmlvv.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_54ZSuDcBHMTiUwqIuYPHgg_92qQoj2W';
         const ADMIN_EMAIL = 'admin@equipmentloan.com';
         
         document.addEventListener('DOMContentLoaded', async () => {
-            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+                auth: {
+                    persistSession: true,
+                    storageKey: 'equipment-loan-auth',
+                    storage: window.localStorage
+                }
+            });
             const { data: { session } } = await supabase.auth.getSession();
             
             // Check if logged in and is admin
