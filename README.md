@@ -5,7 +5,8 @@ A simple, easy-to-deploy equipment checkout and loan tracking system for student
 ## Live Site
 
 ```link
-https://jdamaso-ops.github.io/Equipment-Loan-System
+https://jdamaso-ops.github.io/Equipment-Loan-System/
+```
 
 ## Features
 
