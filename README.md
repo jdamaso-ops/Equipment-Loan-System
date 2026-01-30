@@ -2,6 +2,11 @@
 
 A simple, easy-to-deploy equipment checkout and loan tracking system for students.
 
+## Live Site
+
+```link
+https://jdamaso-ops/
+
 ## Features
 
 - 📋 Equipment checkout form for IT staff
